@@ -25,7 +25,7 @@ res.sendFile(path.join(__dirname, '/public/notes.html'))
 
 
 
-
+// function to post notes 
 function createNewNote(body, notesArray) {
     const newNote = body;
     if (!Array.isArray(notesArray))
@@ -38,7 +38,7 @@ function createNewNote(body, notesArray) {
     notesArray[0]++;
 
     notesArray.push(newNote);
-    fs.writeFileSync(
+    fs.writeFile(
         path.join(__dirname, './db/db.json'),
         JSON.stringify(notesArray, null, 2)
     );
@@ -46,9 +46,22 @@ function createNewNote(body, notesArray) {
 }
 
 app.post('/api/notes', (req, res) => {
-    const newNote = createNewNote(req.body, allNotes);
+    const newNote = createNewNote(req.body, api);
     res.json(newNote);
 });
+
+
+//delete notes 
+function deleteNotes (id, notesArray) {
+    for (let i = 0; i < notesArray.length; i++) {
+        let note = notesArray[i];
+        if (note.id === id ) {
+            notesArray.splice(i,1);
+            fs.writeFile(path.join(__dirname, './db/db.json'),JSON.stringify(notesArray, null, 2))
+        }
+
+}
+}
 
 app.listen(PORT, () =>
   console.log(`App listening at http://localhost:${PORT}`)
