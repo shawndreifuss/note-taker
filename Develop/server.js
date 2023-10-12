@@ -2,9 +2,12 @@
 const fs = require('fs')
 const path = require('path');
 const express = require('express');
-const api = require('./db/db.json')
+const db = require('./db/db.json')
 const PORT = process.env.PORT || 3001;
 const app = express();
+
+//gives unique id 
+const { v4: uuidv4 } = require('uuid');
 
 //middleware
 app.use(express.json());
@@ -28,29 +31,15 @@ res.sendFile(path.join(__dirname, '/public/notes.html'))
 
 
 // function to post notes 
-function createNewNote(body, notesArray) {
-    const newNote = body;
-    if (!Array.isArray(notesArray))
-        notesArray = [];
-    
-    if (notesArray.length === 0)
-        notesArray.push(0);
+app.post('api/notes', (req, res) => {
+    const newNote = req.body;
+    newNote.id = uuidv4()
 
-    body.id = notesArray[0];
-    notesArray[0]++;
+    db.push(newNote)
+    fs.writeFile('./db/db.json', JSON.stringify(db))
+    res.json(db)
 
-    notesArray.push(newNote);
-    fs.writeFile(
-        path.join(__dirname, './db/db.json'),
-        JSON.stringify(notesArray, null, 2)
-    );
-    return newNote;
-}
-
-app.post('/api/notes', (req, res) => {
-    const newNote = createNewNote(req.body, api);
-    res.json(newNote);
-});
+})
 
 
 //delete notes 
@@ -69,7 +58,10 @@ app.delete('/api/notes/:id', (req, res) => {
     res.json(true);
 });
 
-
+//wildcard route
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'))
+})
 app.listen(PORT, () =>
   console.log(`App listening at http://localhost:${PORT}`)
 );
