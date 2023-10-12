@@ -43,20 +43,12 @@ app.post('api/notes', (req, res) => {
 
 
 //delete notes 
-function deleteNotes (id, notesArray) {
-    for (let i = 0; i < notesArray.length; i++) {
-        let note = notesArray[i];
-        if (note.id === id ) {
-            notesArray.splice(i,1);
-            fs.writeFile(path.join(__dirname, './db/db.json'),JSON.stringify(notesArray, null, 2))
-        }
-
-}
-}
-app.delete('/api/notes/:id', (req, res) => {
-    deleteNote(req.params.id, api);
-    res.json(true);
-});
+app.delete('/api/notes/:id', (req,res) => {
+    const newDb = db.filter((note) =>
+    note.id !== req.params.id)
+    fs.writeFile('./db/db.json', JSON.stringify(newDb))
+    fs.readFile.json(newDb)
+})
 
 //wildcard route
 app.get('*', (req, res) => {
