@@ -1,16 +1,22 @@
 # Note-Taker
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://note-taker-supreme.herokuapp.com/)
+## Table of Contents
+  * [Description](#description)
+  * [Technologies](#technologies-used)
+  * [Challenges](#challenges)
+  * [User Story](#user-story)
+  * [How to Use](#howtouse)
+  * [Installation](#installation)
+  
 
 
+## User Story
+```
+AS A small business owner
+I WANT to be able to write and save notes
+SO THAT I can organize my thoughts and keep track of tasks I need to complete
+```
 
-## Demonstration 
-
-![Demonstration of Note Taker as a gif](https://github.com/cml2377/Note-Taker/blob/master/public/assets/demo.gif)
-
-## Business Context
-
-For users that need to keep track of a lot of information, it's easy to forget or be unable to recall something important. Being able to take persistent notes allows users to have written information available when needed.
 
 ## How to Use
 
@@ -19,6 +25,18 @@ When you get to the notes page, on the left, you see saved notes along with a de
 On the right, you can create a new note with a title and notes within the description. 
 On the top right-hand corner, you can click save to automatically save the new note to the list on the left. 
 
-### Thanks
+## Technologies
+* [nodejs](https://nodejs.org/en/)
+* [express.js](https://expressjs.com/)
+* [Heroku](https://heroku.com) for live deployment
 
-UT Coding bootcamp for answering all of my silly questions. 
+## Challenges
+* Corretly implementing CRUD protocol
+* Working with Heroku for live deployment of a non-static page
+* Learning about and implementing different routes
+
+## Installation
+* For installation onto local machine, clone provided repository.
+* Use `npm install` to install dependencies.
+* Use `npm run dev` to initiate the server in your terminal.
+* Visit `http://localhost:3000/` in your browser. Default provided port is 3000.

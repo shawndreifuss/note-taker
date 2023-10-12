@@ -16,8 +16,13 @@ app.use(express.static('public'));
 
 
 app.get('/api/notes', (req, res) => {
-    res.json(api.slice(1));
-});
+    fs.readFile('./db/db.json', (err, data) => {
+        if (err) throw err;
+        let dbData = JSON.parse(data);
+        res.json(dbData)
+    });   
+})
+
 
 app.get('/', (req,res) => 
 res.sendFile(path.join(__dirname, '/public/index.html'))
@@ -31,7 +36,7 @@ res.sendFile(path.join(__dirname, '/public/notes.html'))
 
 
 // function to post notes 
-app.post('api/notes', (req, res) => {
+app.post('/api/notes', (req, res) => {
     const newNote = req.body;
     newNote.id = uuidv4()
 
