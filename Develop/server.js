@@ -12,9 +12,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
 
-app.get('/api/notes', (req, res) => {
-    res.json(api.slice(1));
-});
+
 
 app.get('/', (req,res) => 
 res.sendFile(path.join(__dirname, '/public/index.html'))
@@ -64,6 +62,11 @@ function deleteNotes (id, notesArray) {
 
 }
 }
+app.delete('/api/notes/:id', (req, res) => {
+    deleteNote(req.params.id, api);
+    res.json(true);
+});
+
 
 app.listen(PORT, () =>
   console.log(`App listening at http://localhost:${PORT}`)
