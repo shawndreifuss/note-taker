@@ -24,12 +24,21 @@ app.get('/api/notes', (req, res) => {
 
 //post notes function
 app.post('/api/notes', (req, res) => {
-    const newNote = req.body
-    newNote.id = uuidv4()
-    db.push(newNote)
-    fs.writeFile('./db/db.json', JSON.stringify(db))
-    res.json(db)
-})
+    let db = fs.readFileSync('db/db.json');
+    db = JSON.parse(db);
+    res.json(db);
+    let userNote = {
+      title: req.body.title,
+      text: req.body.text,
+    
+      id: uniqid(),
+    };
+  
+    db.push(userNote);
+    fs.writeFileSync('db/db.json', JSON.stringify(db));
+    res.json(db);
+
+  });
 //delete function
 app.delete('/api/notes/:id', (req, res) => {
     const newDb = db.filter((note) =>
