@@ -1,6 +1,21 @@
 [
-    {
-        "title":"Test Title",
-        "text":"Test text"
+  null,
+  {
+    "title": "sgreg",
+    "text": "rgserg",
+    "id": null
+  },
+  {
+    "title": "asdf",
+    "text": "asdf",
+    "id": {
+      "title": "Test Title",
+      "text": "Test text"
     }
+  },
+  {
+    "title": "asdf",
+    "text": "asdf",
+    "id": null
+  }
 ]

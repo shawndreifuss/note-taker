@@ -1,65 +1,77 @@
-const fs = require('fs')
-const path = require('path')
-const express = require('express')
-const app = express()
-const PORT = process.env.PORT || 3001
-const db = require('./db/db.json')
+const PORT = process.env.PORT || 3001;
+const fs = require('fs');
+const path = require('path');
+// require and set express to app use
+const express = require('express');
+const app = express();
 
-//gives notes  a unique ID
-const { v4: uuidv4 } = require('uuid');
+const db = require('./db/db.json');
+//express middleware
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.static('public'));
 
-//middleware
-app.use(express.static('public'))
-app.use(express.json())
-
-//API Routes
-//get notes from api
 app.get('/api/notes', (req, res) => {
-    fs.readFile('./db/db.json', (err, data) => {
-        if (err) throw err;
-        let dbData = JSON.parse(data);
-        res.json(dbData)
-    });   
-})
-
-//post notes function
-app.post('/api/notes', (req, res) => {
-    let db = fs.readFileSync('db/db.json');
-    db = JSON.parse(db);
-    res.json(db);
-    let userNote = {
-      title: req.body.title,
-      text: req.body.text,
-    
-      id: uniqid(),
-    };
-  
-    db.push(userNote);
-    fs.writeFileSync('db/db.json', JSON.stringify(db));
-    res.json(db);
-
-  });
-//delete function
-app.delete('/api/notes/:id', (req, res) => {
-    const newDb = db.filter((note) =>
-        note.id !== req.params.id)
-    fs.writeFile('./db/db.json', JSON.stringify(newDb))
-    readFile.json(newDb)
-})
-//route for homepage
+    res.json(db.slice(1));
+});
+//get route for index html
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'))
-})
-//route for notes page
+    res.sendFile(path.join(__dirname, './public/index.html'));
+});
+//get route for notes html
 app.get('/notes', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'notes.html'))
-})
-
-//Wildcard Route
+    res.sendFile(path.join(__dirname, './public/notes.html'));
+});
+//wildcard route
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'))
-})
+    res.sendFile(path.join(__dirname, './public/index.html'));
+});
+//create a new note 
+function createNewNote(body, notesArray) {
+    const newNote = body;
+    if (!Array.isArray(notesArray))
+        notesArray = [];
+    
+    if (notesArray.length === 0)
+        notesArray.push(0);
 
-//App listens with front end on this port
-app.listen(PORT, () =>
-    console.log(`App listening on ${PORT}`))
+    body.id = notesArray[0];
+    notesArray[0]++;
+
+    notesArray.push(newNote);
+    fs.writeFileSync(
+        path.join(__dirname, './db/db.json'),
+        JSON.stringify(notesArray, null, 2)
+    );
+    return newNote;
+}
+//post route 
+app.post('/api/notes', (req, res) => {
+    const newNote = createNewNote(req.body, allNotes);
+    res.json(newNote);
+});
+//delete note route
+function deleteNote(id, notesArray) {
+    for (let i = 0; i < notesArray.length; i++) {
+        let note = notesArray[i];
+
+        if (note.id == id) {
+            notesArray.splice(i, 1);
+            fs.writeFileSync(
+                path.join(__dirname, './db/db.json'),
+                JSON.stringify(notesArray, null, 2)
+            );
+
+            break;
+        }
+    }
+}
+//delete route for notes
+app.delete('/api/notes/:id', (req, res) => {
+    deleteNote(req.params.id, db);
+    res.json(true);
+});
+
+app.listen(PORT, () => {
+    console.log(`API server now on port ${PORT}!`);
+});
